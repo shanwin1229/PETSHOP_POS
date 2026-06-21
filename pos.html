@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Point of Sale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/pos.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <span class="brand-name">PAWPOS</span>
+        <span class="brand-sub">Pet Shop System</span>
+      </div>
+    </a>
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</a>
+      <a class="nav-item active" href="pos.html"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Point of Sale</a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" href="inventory.html"><i class="ti ti-building-warehouse" aria-hidden="true"></i> Inventory <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="suppliers.html"><i class="ti ti-truck" aria-hidden="true"></i> Suppliers</a>
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item" href="customers.html"><i class="ti ti-users" aria-hidden="true"></i> Customers</a>
+      <a class="nav-item" href="pets.html"><i class="ti ti-paw" aria-hidden="true"></i> Pet Records</a>
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html"><i class="ti ti-calendar" aria-hidden="true"></i> Appointments <span class="nav-badge">5</span></a>
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item" href="reports.html"><i class="ti ti-file-text" aria-hidden="true"></i> Reports</a>
+      <a class="nav-item" href="audit.html"><i class="ti ti-shield" aria-hidden="true"></i> Audit Logs</a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html"><i class="ti ti-users-group" aria-hidden="true"></i> User Accounts</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">CS</div>
+      <div>
+        <span class="user-name">Cashier User</span>
+        <span class="user-role">Cashier</span>
+      </div>
+      <button class="user-logout" id="logoutBtn" title="Logout" aria-label="Logout">
+        <i class="ti ti-logout" aria-hidden="true"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── POS BODY ── -->
+  <div class="pos-body">
+
+    <!-- LEFT: product browser -->
+    <div class="pos-left">
+      <div class="pos-topbar">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="ti ti-menu-2" aria-hidden="true"></i>
+        </button>
+        <span class="pos-title">Point of Sale</span>
+        <div class="search-wrap">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" id="productSearch" placeholder="Search product name or SKU..." autocomplete="off" />
+        </div>
+        <div style="font-size:12px;color:#aaa;white-space:nowrap;" id="sessionInfo">—</div>
+      </div>
+
+      <div class="cat-scroll" id="catPills"></div>
+
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+
+    <!-- RIGHT: cart -->
+    <div class="pos-right" id="posRight">
+      <div class="cart-head">
+        <div>
+          <span class="cart-title">Cart</span>
+          <span class="cart-count" id="cartCount"> · 0 items</span>
+        </div>
+        <button class="btn-clear" id="clearCartBtn" aria-label="Clear cart">
+          <i class="ti ti-trash" aria-hidden="true"></i> Clear
+        </button>
+      </div>
+
+      <!-- Customer -->
+      <div class="customer-row">
+        <i class="ti ti-user" aria-hidden="true"></i>
+        <select class="customer-select" id="customerSelect" aria-label="Select customer">
+          <option value="">Walk-in customer</option>
+        </select>
+      </div>
+
+      <!-- Cart items -->
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty" id="cartEmpty">
+          <i class="ti ti-shopping-cart-off" aria-hidden="true"></i>
+          <p>No items yet.<br>Click a product to add.</p>
+        </div>
+      </div>
+
+      <!-- Discount -->
+      <div class="discount-row">
+        <span class="discount-label">Discount</span>
+        <div class="discount-type-toggle">
+          <button class="disc-toggle active" id="discPeso"    type="button">₱</button>
+          <button class="disc-toggle"        id="discPercent" type="button">%</button>
+        </div>
+        <input class="discount-input" type="number" id="discountInput" value="0" min="0" placeholder="0" />
+      </div>
+
+      <!-- Totals -->
+      <div class="totals-section">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span id="subtotalAmt">₱0.00</span>
+        </div>
+        <div class="total-row" id="discountRow" style="display:none;">
+          <span>Discount</span>
+          <span class="discount-amt" id="discountAmt">−₱0.00</span>
+        </div>
+        <div class="total-row grand">
+          <span>Total</span>
+          <span id="grandTotal">₱0.00</span>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="payment-section">
+        <span class="payment-label">Cash received</span>
+        <div class="payment-presets" id="paymentPresets"></div>
+        <div class="payment-input-wrap">
+          <span class="currency">₱</span>
+          <input class="payment-input" type="number" id="paymentInput" placeholder="0.00" min="0" step="0.01" />
+        </div>
+        <div class="change-row" id="changeRow">
+          <span class="change-label">Change</span>
+          <span class="change-value" id="changeAmt">₱0.00</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn" disabled>
+          <i class="ti ti-receipt" aria-hidden="true"></i>
+          Process payment
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── RECEIPT MODAL ── -->
+<div class="modal-overlay" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle">
+  <div class="receipt-box" id="receiptBox">
+    <div class="receipt-head">
+      <span class="receipt-store-icon">🐾</span>
+      <span class="receipt-store-name" id="receiptTitle">PAWPOS Pet Shop</span>
+      <div class="receipt-store-addr">123 Pet Street, San Juan City<br>Tel: (02) 8123-4567 | TIN: 123-456-789</div>
+      <div class="receipt-txn-no" id="receiptTxnNo">TXN-00001</div>
+      <div class="receipt-date"   id="receiptDate">—</div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-customer">Customer: <span id="receiptCustomer">Walk-in</span></div>
+      <div class="receipt-items-head">
+        <span>Item</span><span>Amount</span>
+      </div>
+      <div id="receiptItems"></div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-totals">
+        <div class="receipt-total-row">
+          <span>Subtotal</span>
+          <span id="receiptSubtotal">₱0.00</span>
+        </div>
+        <div class="receipt-total-row" id="receiptDiscRow" style="display:none;">
+          <span>Discount</span>
+          <span class="disc" id="receiptDisc">−₱0.00</span>
+        </div>
+        <div class="receipt-total-row grand">
+          <span>Total</span>
+          <span id="receiptTotal">₱0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="receipt-section">
+      <div class="receipt-payment-info">
+        <div class="receipt-pay-row">
+          <span style="color:#888">Cash received</span>
+          <span id="receiptCash">₱0.00</span>
+        </div>
+        <div class="receipt-pay-row change">
+          <span>Change</span>
+          <span id="receiptChange">₱0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="receipt-footer">
+      <p class="receipt-footer-msg">Thank you for shopping at PAWPOS!<br>Please come again with your furry friends. 🐾</p>
+      <span class="receipt-barcode" id="receiptBarcode">||||| ||||| ||| |||||</span>
+    </div>
+
+    <div class="receipt-actions">
+      <button class="btn-receipt-cancel" id="receiptCloseBtn">New transaction</button>
+      <button class="btn-receipt-print"  id="receiptPrintBtn">
+        <i class="ti ti-printer" aria-hidden="true"></i> Print receipt
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js?v=20260621-7"></script>
+<script src="pos.js"></script>
+</body>
+</html>

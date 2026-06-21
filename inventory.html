@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Inventory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/inventory.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <span class="brand-name">PAWPOS</span>
+        <span class="brand-sub">Pet Shop System</span>
+      </div>
+    </a>
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</a>
+      <a class="nav-item" href="pos.html"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Point of Sale</a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item active" href="inventory.html"><i class="ti ti-building-warehouse" aria-hidden="true"></i> Inventory <span class="nav-badge" id="navBadge">3</span></a>
+      <a class="nav-item" href="suppliers.html"><i class="ti ti-truck" aria-hidden="true"></i> Suppliers</a>
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item" href="customers.html"><i class="ti ti-users" aria-hidden="true"></i> Customers</a>
+      <a class="nav-item" href="pets.html"><i class="ti ti-paw" aria-hidden="true"></i> Pet Records</a>
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html"><i class="ti ti-calendar" aria-hidden="true"></i> Appointments <span class="nav-badge">5</span></a>
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item" href="reports.html"><i class="ti ti-file-text" aria-hidden="true"></i> Reports</a>
+      <a class="nav-item" href="audit.html"><i class="ti ti-shield" aria-hidden="true"></i> Audit Logs</a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html"><i class="ti ti-users-group" aria-hidden="true"></i> User Accounts</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">AD</div>
+      <div>
+        <span class="user-name">Admin User</span>
+        <span class="user-role">Administrator</span>
+      </div>
+      <button class="user-logout" id="logoutBtn" title="Logout" aria-label="Logout">
+        <i class="ti ti-logout" aria-hidden="true"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="ti ti-menu-2" aria-hidden="true"></i>
+        </button>
+        <div>
+          <div class="page-title">Inventory</div>
+          <div class="page-sub" id="topbarSub">Loading...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-secondary" id="stockOutBtn" data-rbac="inventory:adjust">
+          <i class="ti ti-arrow-bar-up" aria-hidden="true"></i> Stock out
+        </button>
+        <button class="btn-primary" id="stockInBtn" data-rbac="inventory:adjust">
+          <i class="ti ti-arrow-bar-down" aria-hidden="true"></i> Stock in
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Total SKUs</span>
+            <div class="stat-icon blue"><i class="ti ti-package" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-meta">Products tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Low stock</span>
+            <div class="stat-icon amber"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statLow">0</div>
+          <div class="stat-meta"><span class="down">Below reorder level</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Out of stock</span>
+            <div class="stat-icon red"><i class="ti ti-circle-x" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statOut">0</div>
+          <div class="stat-meta"><span class="down">Needs restocking</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">Expiring soon</span>
+            <div class="stat-icon red"><i class="ti ti-calendar-exclamation" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statExpiring">0</div>
+          <div class="stat-meta"><span class="down">Within 60 days</span></div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="stock"   role="tab" aria-selected="true">Current stock</button>
+        <button class="tab-btn"        data-tab="low"     role="tab" aria-selected="false">Low stock</button>
+        <button class="tab-btn"        data-tab="expiry"  role="tab" aria-selected="false">Expiry monitoring</button>
+        <button class="tab-btn"        data-tab="history" role="tab" aria-selected="false">History</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" id="searchInput" placeholder="Search product..." autocomplete="off" />
+        </div>
+        <select class="filter-select" id="catFilter" aria-label="Filter by category">
+          <option value="">All categories</option>
+          <option>Dog food</option>
+          <option>Cat food</option>
+          <option>Medicine</option>
+          <option>Supplements</option>
+          <option>Grooming</option>
+          <option>Accessories</option>
+          <option>Toys</option>
+          <option>Treats</option>
+          <option>Hygiene</option>
+          <option>Aquatics</option>
+          <option>Bird</option>
+          <option>Others</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="tbl" id="mainTable" aria-label="Inventory table">
+          <thead id="tableHead"></thead>
+          <tbody id="tableTbody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <i class="ti ti-package-off" aria-hidden="true"></i>
+          <p>No items found.</p>
+        </div>
+        <div class="pagination" id="paginationBar">
+          <span id="paginationInfo">—</span>
+          <div class="page-btns" id="pageBtns"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── STOCK IN MODAL ── -->
+<div class="modal-overlay" id="stockInModal" role="dialog" aria-modal="true" aria-labelledby="siTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="siTitle">Stock in</span>
+      <button class="modal-close" id="siClose" aria-label="Close"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label" for="siProduct">Product *</label>
+        <select class="field-input" id="siProduct"></select>
+      </div>
+      <div class="modal-product-info" id="siProductInfo" style="display:none;">
+        <div class="modal-product-name" id="siProductName">—</div>
+        <div class="modal-product-meta" id="siProductMeta">Current stock: —</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="siQty">Quantity to add *</label>
+        <div class="qty-row">
+          <button class="qty-btn" id="siMinus" type="button" aria-label="Decrease">−</button>
+          <input class="field-input qty-input" type="number" id="siQty" value="1" min="1" />
+          <button class="qty-btn" id="siPlus"  type="button" aria-label="Increase">+</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="siSupplier">Supplier</label>
+        <input class="field-input" type="text" id="siSupplier" placeholder="Supplier name or PO number" />
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="siExpiry">Expiry date (update)</label>
+        <input class="field-input" type="date" id="siExpiry" />
+        <span class="field-hint">Leave blank to keep existing expiry date</span>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="siRemarks">Remarks</label>
+        <textarea class="field-input" id="siRemarks" placeholder="Optional notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="siCancel">Cancel</button>
+      <button class="btn-primary" id="siSave"><i class="ti ti-arrow-bar-down" aria-hidden="true"></i> Confirm stock in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STOCK OUT MODAL ── -->
+<div class="modal-overlay" id="stockOutModal" role="dialog" aria-modal="true" aria-labelledby="soTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="soTitle">Stock out</span>
+      <button class="modal-close" id="soClose" aria-label="Close"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label" for="soProduct">Product *</label>
+        <select class="field-input" id="soProduct"></select>
+      </div>
+      <div class="modal-product-info" id="soProductInfo" style="display:none;">
+        <div class="modal-product-name" id="soProductName">—</div>
+        <div class="modal-product-meta" id="soProductMeta">Current stock: —</div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="soQty">Quantity to deduct *</label>
+        <div class="qty-row">
+          <button class="qty-btn" id="soMinus" type="button" aria-label="Decrease">−</button>
+          <input class="field-input qty-input" type="number" id="soQty" value="1" min="1" />
+          <button class="qty-btn" id="soPlus"  type="button" aria-label="Increase">+</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="soReason">Reason *</label>
+        <select class="field-input" id="soReason">
+          <option value="">Select reason</option>
+          <option>Damaged / expired</option>
+          <option>Internal use</option>
+          <option>Return to supplier</option>
+          <option>Theft / loss</option>
+          <option>Manual adjustment</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="soRemarks">Remarks</label>
+        <textarea class="field-input" id="soRemarks" placeholder="Optional notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="soCancel">Cancel</button>
+      <button class="btn-primary" id="soSave" style="background:#c0392b;"><i class="ti ti-arrow-bar-up" aria-hidden="true"></i> Confirm stock out</button>
+    </div>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="inventory.js?v=20260621-8"></script>
+</body>
+</html>

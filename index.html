@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/index.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+  <div class="login-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="logo">
+        <div class="logo-icon">🐾</div>
+        <div>
+          <span class="logo-name">PAWPOS</span>
+          <span class="logo-tagline">Pet Shop Management</span>
+        </div>
+      </div>
+
+      <div class="panel-middle">
+        <h1 class="panel-headline">
+          Manage your shop<br>with <span>paw-fect</span><br>precision.
+        </h1>
+        <p class="panel-desc">
+          All-in-one point of sale, inventory, and grooming appointments system for modern pet shops.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="form-wrap">
+        <h2 class="form-title">Welcome back</h2>
+        <p class="form-subtitle">Sign in to your account to continue.</p>
+
+        <!-- Error message -->
+        <div class="error-box" id="errorBox" role="alert" aria-live="polite">
+          <i class="ti ti-alert-circle" aria-hidden="true"></i>
+          <span id="errorMsg">Invalid username or password.</span>
+        </div>
+
+        <!-- Username -->
+        <div class="field">
+          <label class="field-label" for="username">Username</label>
+          <div class="input-wrap">
+            <i class="ti ti-user input-icon" aria-hidden="true"></i>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              autocomplete="username"
+              autofocus
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label class="field-label" for="password">Password</label>
+          <div class="input-wrap">
+            <i class="ti ti-lock input-icon" aria-hidden="true"></i>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button class="eye-toggle" id="eyeBtn" type="button" aria-label="Toggle password visibility">
+              <i class="ti ti-eye" id="eyeIcon" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Options row -->
+        <div class="options-row">
+          <label class="remember-label">
+            <input type="checkbox" id="rememberMe" name="rememberMe" />
+            Remember me
+          </label>
+          <a href="#" class="forgot-link" id="forgotLink">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-login" id="loginBtn" type="button">
+          <i class="ti ti-login" id="loginIcon" aria-hidden="true"></i>
+          <span id="loginText">Sign in</span>
+        </button>
+
+        <div class="form-footer">
+          <p>Secure login &mdash; PAWPOS System</p>
+          <p class="version">v1.0.0</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div class="modal-overlay" id="forgotModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <h3 class="modal-title" id="modalTitle">Reset password</h3>
+      <p class="modal-desc">
+        Please contact your system administrator to reset your password. You may provide your email below for reference.
+      </p>
+
+      <div class="field" style="margin-bottom: 0;">
+        <label class="field-label" for="resetEmail">Your email (optional)</label>
+        <div class="input-wrap">
+          <i class="ti ti-mail input-icon" aria-hidden="true"></i>
+          <input
+            type="email"
+            id="resetEmail"
+            placeholder="your@email.com"
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" id="cancelReset" type="button">Cancel</button>
+        <button class="btn-confirm" id="confirmReset" type="button">Send request</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="ui-system.js?v=20260621-1"></script>
+  <script src="login.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Customers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/customers.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <span class="brand-name">PAWPOS</span>
+        <span class="brand-sub">Pet Shop System</span>
+      </div>
+    </a>
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard</a>
+      <a class="nav-item" href="pos.html"><i class="ti ti-shopping-cart" aria-hidden="true"></i> Point of Sale</a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" href="inventory.html"><i class="ti ti-building-warehouse" aria-hidden="true"></i> Inventory <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="suppliers.html"><i class="ti ti-truck" aria-hidden="true"></i> Suppliers</a>
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item active" href="customers.html"><i class="ti ti-users" aria-hidden="true"></i> Customers</a>
+      <a class="nav-item" href="pets.html"><i class="ti ti-paw" aria-hidden="true"></i> Pet Records</a>
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html"><i class="ti ti-calendar" aria-hidden="true"></i> Appointments <span class="nav-badge">5</span></a>
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item" href="reports.html"><i class="ti ti-file-text" aria-hidden="true"></i> Reports</a>
+      <a class="nav-item" href="audit.html"><i class="ti ti-shield" aria-hidden="true"></i> Audit Logs</a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html"><i class="ti ti-users-group" aria-hidden="true"></i> User Accounts</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">AD</div>
+      <div><span class="user-name">Admin User</span><span class="user-role">Administrator</span></div>
+      <button class="user-logout" id="logoutBtn" title="Logout" aria-label="Logout"><i class="ti ti-logout" aria-hidden="true"></i></button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+        <div>
+          <div class="page-title">Customers</div>
+          <div class="page-sub" id="topbarSub">Loading...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-primary" id="addCustomerBtn" data-rbac="customer:add"><i class="ti ti-plus" aria-hidden="true"></i> Add customer</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total customers</span><div class="stat-icon si-green"><i class="ti ti-users" aria-hidden="true"></i></div></div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-meta">Registered members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Active customers</span><div class="stat-icon si-blue"><i class="ti ti-user-check" aria-hidden="true"></i></div></div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-meta">With transactions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Pet records</span><div class="stat-icon si-purple"><i class="ti ti-paw" aria-hidden="true"></i></div></div>
+          <div class="stat-value" id="statPets">0</div>
+          <div class="stat-meta">Linked to customers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total revenue</span><div class="stat-icon si-amber"><i class="ti ti-currency-peso" aria-hidden="true"></i></div></div>
+          <div class="stat-value" id="statRevenue">₱0</div>
+          <div class="stat-meta">From all customers</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" id="searchInput" placeholder="Search name, contact, or email..." autocomplete="off" />
+        </div>
+        <select class="filter-select" id="statusFilter" aria-label="Filter by status">
+          <option value="">All customers</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <select class="filter-select" id="sortSelect" aria-label="Sort by">
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="spent-desc">Highest spend</option>
+          <option value="recent">Most recent</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="tbl" aria-label="Customer list">
+          <thead>
+            <tr>
+              <th class="col-name">Customer</th>
+              <th class="col-contact">Contact</th>
+              <th class="col-status">Status</th>
+              <th class="col-spent">Total spent</th>
+              <th>Joined</th>
+              <th class="col-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="customerTbody"></tbody>
+        </table>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <i class="ti ti-users-group" aria-hidden="true"></i>
+          <p>No customers found.</p>
+        </div>
+        <div class="pagination" id="paginationBar">
+          <span id="paginationInfo">—</span>
+          <div class="page-btns" id="pageBtns"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── CUSTOMER DETAIL DRAWER ── -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="customerDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <span class="drawer-title" id="drawerTitle">Customer Profile</span>
+    <button class="drawer-close" id="drawerClose" aria-label="Close"><i class="ti ti-x" aria-hidden="true"></i></button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <button class="btn-edit"   id="drawerEditBtn"   data-rbac="customer:edit"><i class="ti ti-edit" aria-hidden="true"></i> Edit</button>
+    <button class="btn-delete" id="drawerDeleteBtn" data-rbac="customer:delete"><i class="ti ti-trash" aria-hidden="true"></i> Delete</button>
+  </div>
+</div>
+
+<!-- ── ADD / EDIT MODAL ── -->
+<div class="modal-overlay" id="custModal" role="dialog" aria-modal="true" aria-labelledby="custModalTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="custModalTitle">Add customer</span>
+      <button class="modal-close" id="custModalClose" aria-label="Close"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label" for="fFirstName">First name *</label>
+          <input class="field-input" type="text" id="fFirstName" placeholder="e.g. Juan" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fLastName">Last name *</label>
+          <input class="field-input" type="text" id="fLastName" placeholder="e.g. dela Cruz" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fContact">Contact number *</label>
+          <input class="field-input" type="tel" id="fContact" placeholder="09XX-XXX-XXXX" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fEmail">Email address</label>
+          <input class="field-input" type="email" id="fEmail" placeholder="email@example.com" />
+        </div>
+        <div class="field-group span2">
+          <label class="field-label" for="fAddress">Address</label>
+          <input class="field-input" type="text" id="fAddress" placeholder="House no., street, barangay, city" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fBirthday">Birthday</label>
+          <input class="field-input" type="date" id="fBirthday" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fStatus">Status</label>
+          <select class="field-input" id="fStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="custModalCancel">Cancel</button>
+      <button class="btn-primary" id="custModalSave"><i class="ti ti-device-floppy" aria-hidden="true"></i> Save customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ── -->
+<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+  <div class="modal-box" style="max-width:360px;">
+    <div class="confirm-body">
+      <div class="confirm-icon"><i class="ti ti-trash" aria-hidden="true"></i></div>
+      <div class="confirm-title">Delete customer?</div>
+      <p class="confirm-msg" id="deleteMsg">This action cannot be undone.</p>
+    </div>
+    <div class="modal-foot" style="justify-content:center;gap:10px;">
+      <button class="btn-cancel" id="deleteCancelBtn">Cancel</button>
+      <button class="btn-danger" id="deleteConfirmBtn"><i class="ti ti-trash" style="font-size:14px;margin-right:4px;" aria-hidden="true"></i>Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="customers.js?v=20260621-8"></script>
+</body>
+</html>

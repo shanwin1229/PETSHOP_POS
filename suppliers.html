@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Suppliers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/suppliers.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🐾</div>
+      <div><span class="brand-name">PAWPOS</span><span class="brand-sub">Pet Shop System</span></div>
+    </a>
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+      <a class="nav-item" href="pos.html"><i class="ti ti-shopping-cart"></i> Point of Sale</a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" href="inventory.html"><i class="ti ti-building-warehouse"></i> Inventory <span class="nav-badge">3</span></a>
+      <a class="nav-item active" href="suppliers.html"><i class="ti ti-truck"></i> Suppliers</a>
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item" href="customers.html"><i class="ti ti-users"></i> Customers</a>
+      <a class="nav-item" href="pets.html"><i class="ti ti-paw"></i> Pet Records</a>
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html"><i class="ti ti-calendar"></i> Appointments <span class="nav-badge">5</span></a>
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item" href="reports.html"><i class="ti ti-file-text"></i> Reports</a>
+      <a class="nav-item" href="audit.html"><i class="ti ti-shield"></i> Audit Logs</a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html"><i class="ti ti-users-group"></i> User Accounts</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">AD</div>
+      <div><span class="user-name">Admin User</span><span class="user-role">Administrator</span></div>
+      <button class="user-logout" id="logoutBtn" aria-label="Logout"><i class="ti ti-logout"></i></button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar"><i class="ti ti-menu-2"></i></button>
+        <div>
+          <div class="page-title">Suppliers</div>
+          <div class="page-sub" id="topbarSub">Loading...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-primary" id="addSupplierBtn" data-rbac="supplier:add"><i class="ti ti-plus"></i> Add supplier</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Total suppliers</span><div class="stat-icon si-green"><i class="ti ti-truck"></i></div></div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-meta">Registered suppliers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Active</span><div class="stat-icon si-blue"><i class="ti ti-circle-check"></i></div></div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-meta">Currently supplying</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Products covered</span><div class="stat-icon si-amber"><i class="ti ti-box"></i></div></div>
+          <div class="stat-value" id="statProducts">0</div>
+          <div class="stat-meta">Across all suppliers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top"><span class="stat-label">Categories</span><div class="stat-icon si-purple"><i class="ti ti-category"></i></div></div>
+          <div class="stat-value" id="statCategories">0</div>
+          <div class="stat-meta">Product types sourced</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <i class="ti ti-search si"></i>
+          <input type="text" id="searchInput" placeholder="Search supplier name or contact..." autocomplete="off" />
+        </div>
+        <select class="filter-select" id="statusFilter" aria-label="Filter by status">
+          <option value="">All status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <select class="filter-select" id="sortSelect" aria-label="Sort by">
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="products-desc">Most products</option>
+        </select>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="suppliers-grid" id="suppliersGrid"></div>
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <i class="ti ti-truck-off"></i>
+        <p>No suppliers found.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── SUPPLIER DETAIL DRAWER ── -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="supplierDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <span class="drawer-title" id="drawerTitle">Supplier Details</span>
+    <button class="drawer-close" id="drawerClose" aria-label="Close"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <button class="btn-edit-full" id="drawerEditBtn"><i class="ti ti-edit"></i> Edit</button>
+    <button class="btn-delete-sm" id="drawerDeleteBtn"><i class="ti ti-trash"></i> Delete</button>
+  </div>
+</div>
+
+<!-- ── ADD / EDIT MODAL ── -->
+<div class="modal-overlay" id="supplierModal" role="dialog" aria-modal="true" aria-labelledby="supplierModalTitle">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="modal-title" id="supplierModalTitle">Add supplier</span>
+      <button class="modal-close" id="supplierModalClose" aria-label="Close"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">Company information</div>
+      <div class="form-grid">
+        <div class="field-group span2">
+          <label class="field-label" for="fName">Supplier name *</label>
+          <input class="field-input" type="text" id="fName" placeholder="e.g. VillMan Computers Inc." />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fContact">Contact person</label>
+          <input class="field-input" type="text" id="fContact" placeholder="Full name" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fStatus">Status</label>
+          <select class="field-input" id="fStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-section-title">Contact details</div>
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label" for="fPhone">Phone / Mobile *</label>
+          <input class="field-input" type="tel" id="fPhone" placeholder="02-XXXX-XXXX or 09XX..." />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fEmail">Email</label>
+          <input class="field-input" type="email" id="fEmail" placeholder="supplier@email.com" />
+        </div>
+        <div class="field-group span2">
+          <label class="field-label" for="fAddress">Address *</label>
+          <input class="field-input" type="text" id="fAddress" placeholder="Street, city, province" />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fWebsite">Website</label>
+          <input class="field-input" type="url" id="fWebsite" placeholder="https://..." />
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fPaymentTerms">Payment terms</label>
+          <select class="field-input" id="fPaymentTerms">
+            <option value="">Select terms</option>
+            <option>Cash on delivery</option>
+            <option>Net 15</option>
+            <option>Net 30</option>
+            <option>Net 60</option>
+            <option>Prepaid</option>
+          </select>
+        </div>
+        <div class="field-group span2">
+          <label class="field-label" for="fNotes">Notes</label>
+          <textarea class="field-input" id="fNotes" placeholder="Delivery schedule, MOQ, special arrangements..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-section-title">Products supplied</div>
+      <div class="product-checklist" id="productChecklist"></div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="supplierModalCancel">Cancel</button>
+      <button class="btn-primary" id="supplierModalSave"><i class="ti ti-device-floppy"></i> Save supplier</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ── -->
+<div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+  <div class="modal-box" style="max-width:360px;">
+    <div class="confirm-body">
+      <div class="confirm-icon"><i class="ti ti-trash"></i></div>
+      <div class="confirm-title">Delete supplier?</div>
+      <p class="confirm-msg" id="deleteMsg">This action cannot be undone.</p>
+    </div>
+    <div class="modal-foot" style="justify-content:center;gap:10px;">
+      <button class="btn-cancel" id="deleteCancelBtn">Cancel</button>
+      <button class="btn-danger" id="deleteConfirmBtn"><i class="ti ti-trash" style="font-size:14px;margin-right:4px;"></i>Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="suppliers.js?v=20260621-8"></script>
+</body>
+</html>

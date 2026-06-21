@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PAWPOS — User Accounts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+    />
+    <link rel="stylesheet" href="css/users.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+  <body>
+    <div class="layout">
+      <!-- ── SIDEBAR ── -->
+      <aside class="sidebar" id="sidebar">
+        <a class="sidebar-brand" href="dashboard.html">
+          <div class="brand-icon">🐾</div>
+          <div>
+            <span class="brand-name">PAWPOS</span
+            ><span class="brand-sub">Pet Shop System</span>
+          </div>
+        </a>
+        <nav>
+          <div class="nav-section-label">Main</div>
+          <a class="nav-item" href="dashboard.html"
+            ><i class="ti ti-layout-dashboard"></i> Dashboard</a
+          >
+          <a class="nav-item" href="pos.html"
+            ><i class="ti ti-shopping-cart"></i> Point of Sale</a
+          >
+          <div class="nav-section-label">Inventory</div>
+          <a class="nav-item" href="inventory.html"
+            ><i class="ti ti-building-warehouse"></i> Inventory
+            <span class="nav-badge">3</span></a
+          >
+          <a class="nav-item" href="suppliers.html"
+            ><i class="ti ti-truck"></i> Suppliers</a
+          >
+          <div class="nav-section-label">Clients</div>
+          <a class="nav-item" href="customers.html"
+            ><i class="ti ti-users"></i> Customers</a
+          >
+          <a class="nav-item" href="pets.html"
+            ><i class="ti ti-paw"></i> Pet Records</a
+          >
+          <div class="nav-section-label">Grooming</div>
+          <a class="nav-item" href="appointments.html"
+            ><i class="ti ti-calendar"></i> Appointments
+            <span class="nav-badge">5</span></a
+          >
+          <div class="nav-section-label">Reports</div>
+          <a class="nav-item" href="reports.html"
+            ><i class="ti ti-file-text"></i> Reports</a
+          >
+          <a class="nav-item" href="audit.html"
+            ><i class="ti ti-shield"></i> Audit Logs</a
+          >
+          <div class="nav-section-label">System</div>
+          <a class="nav-item active" href="users.html"
+            ><i class="ti ti-users-group"></i> User Accounts</a
+          >
+        </nav>
+        <div class="sidebar-user">
+          <div class="user-avatar">AD</div>
+          <div>
+            <span class="user-name">Admin User</span
+            ><span class="user-role-text">Administrator</span>
+          </div>
+          <button class="user-logout" id="logoutBtn" aria-label="Logout">
+            <i class="ti ti-logout"></i>
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── MAIN ── -->
+      <div class="main">
+        <header class="topbar">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <button
+              class="sidebar-toggle"
+              id="sidebarToggle"
+              aria-label="Toggle sidebar"
+            >
+              <i class="ti ti-menu-2"></i>
+            </button>
+            <div>
+              <div class="page-title">User Accounts</div>
+              <div class="page-sub" id="topbarSub">Loading...</div>
+            </div>
+          </div>
+          <div class="topbar-right">
+            <button class="btn-primary" id="addUserBtn">
+              <i class="ti ti-user-plus"></i> Add user
+            </button>
+          </div>
+        </header>
+
+        <div class="content">
+          <!-- Stat cards -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Total users</span>
+                <div class="stat-icon si-green">
+                  <i class="ti ti-users-group"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="statTotal">0</div>
+              <div class="stat-meta">System accounts</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Admins</span>
+                <div class="stat-icon si-green">
+                  <i class="ti ti-shield-check"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="statAdmin">0</div>
+              <div class="stat-meta">Full access</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Cashiers</span>
+                <div class="stat-icon si-blue">
+                  <i class="ti ti-shopping-cart"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="statCashier">0</div>
+              <div class="stat-meta">POS & customers</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-label">Groomers</span>
+                <div class="stat-icon si-purple">
+                  <i class="ti ti-scissors"></i>
+                </div>
+              </div>
+              <div class="stat-value" id="statGroomer">0</div>
+              <div class="stat-meta">Appointments & pets</div>
+            </div>
+          </div>
+
+
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="search-wrap">
+              <i class="ti ti-search si"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search name, username, or email..."
+                autocomplete="off"
+              />
+            </div>
+            <select
+              class="filter-select"
+              id="roleFilter"
+              aria-label="Filter by role"
+            >
+              <option value="">All roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Cashier">Cashier</option>
+              <option value="Groomer">Groomer</option>
+            </select>
+            <select
+              class="filter-select"
+              id="statusFilter"
+              aria-label="Filter by status"
+            >
+              <option value="">All status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="tbl" aria-label="User accounts">
+              <thead>
+                <tr>
+                  <th class="col-user">User</th>
+                  <th class="col-role">Role</th>
+                  <th class="col-contact">Contact</th>
+                  <th class="col-status">Status</th>
+                  <th class="col-last">Last login</th>
+                  <th class="col-actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userTbody"></tbody>
+            </table>
+            <div id="emptyState" class="empty-state" style="display: none">
+              <i class="ti ti-users-group"></i>
+              <p>No users found.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADD / EDIT USER MODAL ── -->
+    <div
+      class="modal-overlay"
+      id="userModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="userModalTitle"
+    >
+      <div class="modal-box">
+        <div class="modal-head">
+          <span class="modal-title" id="userModalTitle">Add user</span>
+          <button class="modal-close" id="userModalClose" aria-label="Close">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-section-title">Account information</div>
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="fFirstName">First name *</label>
+              <input
+                class="field-input"
+                type="text"
+                id="fFirstName"
+                placeholder="e.g. Maria"
+              />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fLastName">Last name *</label>
+              <input
+                class="field-input"
+                type="text"
+                id="fLastName"
+                placeholder="e.g. Santos"
+              />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fUsername">Username *</label>
+              <input
+                class="field-input"
+                type="text"
+                id="fUsername"
+                placeholder="e.g. maria.santos"
+                autocomplete="off"
+              />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fEmail">Email</label>
+              <input
+                class="field-input"
+                type="email"
+                id="fEmail"
+                placeholder="email@pawpos.ph"
+              />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fContact">Contact number</label>
+              <input
+                class="field-input"
+                type="tel"
+                id="fContact"
+                placeholder="09XX-XXX-XXXX"
+              />
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fStatus">Status</label>
+              <select class="field-input" id="fStatus">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-section-title">Password</div>
+          <div class="form-grid">
+            <div class="field-group">
+              <label class="field-label" for="fPassword">Password *</label>
+              <div class="pw-toggle-wrap">
+                <input
+                  class="field-input"
+                  type="password"
+                  id="fPassword"
+                  placeholder="Min. 8 characters"
+                  autocomplete="new-password"
+                />
+                <button
+                  class="pw-eye"
+                  id="pwEye1"
+                  type="button"
+                  aria-label="Toggle password"
+                >
+                  <i class="ti ti-eye" id="pwEye1Icon"></i>
+                </button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="fConfirm"
+                >Confirm password *</label
+              >
+              <div class="pw-toggle-wrap">
+                <input
+                  class="field-input"
+                  type="password"
+                  id="fConfirm"
+                  placeholder="Repeat password"
+                  autocomplete="new-password"
+                />
+                <button
+                  class="pw-eye"
+                  id="pwEye2"
+                  type="button"
+                  aria-label="Toggle confirm password"
+                >
+                  <i class="ti ti-eye" id="pwEye2Icon"></i>
+                </button>
+              </div>
+              <span
+                class="field-hint"
+                id="pwMatchHint"
+                style="color: #c0392b; display: none"
+                >Passwords do not match</span
+              >
+            </div>
+          </div>
+
+          <div class="modal-section-title">Role assignment</div>
+          <div class="role-picker" id="rolePicker">
+            <div class="role-opt" data-role="Admin">
+              <span class="role-opt-icon">🛡️</span>
+              <span class="role-opt-name">Admin</span>
+              <span class="role-opt-desc">Full access</span>
+            </div>
+            <div class="role-opt selected" data-role="Cashier">
+              <span class="role-opt-icon">🛒</span>
+              <span class="role-opt-name">Cashier</span>
+              <span class="role-opt-desc">POS & customers</span>
+            </div>
+            <div class="role-opt" data-role="Groomer">
+              <span class="role-opt-icon">✂️</span>
+              <span class="role-opt-name">Groomer</span>
+              <span class="role-opt-desc">Appointments & pets</span>
+            </div>
+          </div>
+
+          <div class="modal-section-title">Role permissions preview</div>
+          <div class="perms-grid" id="permsPreview"></div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" id="userModalCancel">Cancel</button>
+          <button class="btn-primary" id="userModalSave">
+            <i class="ti ti-device-floppy"></i> Save user
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RESET PASSWORD MODAL ── -->
+    <div
+      class="modal-overlay"
+      id="resetPwModal"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modal-box" style="max-width: 380px">
+        <div class="modal-head">
+          <span class="modal-title">Reset password</span>
+          <button class="modal-close" id="resetPwClose" aria-label="Close">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="pw-reset-info" id="resetPwInfo"></div>
+          <div class="form-grid" style="grid-template-columns: 1fr">
+            <div class="field-group">
+              <label class="field-label" for="rNewPw">New password *</label>
+              <div class="pw-toggle-wrap">
+                <input
+                  class="field-input"
+                  type="password"
+                  id="rNewPw"
+                  placeholder="Min. 8 characters"
+                />
+                <button
+                  class="pw-eye"
+                  id="rPwEye"
+                  type="button"
+                  aria-label="Toggle"
+                >
+                  <i class="ti ti-eye" id="rPwEyeIcon"></i>
+                </button>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="rConfirmPw"
+                >Confirm new password *</label
+              >
+              <input
+                class="field-input"
+                type="password"
+                id="rConfirmPw"
+                placeholder="Repeat password"
+              />
+              <span
+                class="field-hint"
+                id="rPwMatchHint"
+                style="color: #c0392b; display: none"
+                >Passwords do not match</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-cancel" id="resetPwCancel">Cancel</button>
+          <button class="btn-primary" id="resetPwSave">
+            <i class="ti ti-lock"></i> Update password
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DELETE CONFIRM ── -->
+    <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+      <div class="modal-box" style="max-width: 360px">
+        <div class="confirm-body">
+          <div class="confirm-icon"><i class="ti ti-trash"></i></div>
+          <div class="confirm-title">Delete user account?</div>
+          <p class="confirm-msg" id="deleteMsg">
+            This action cannot be undone.
+          </p>
+        </div>
+        <div class="modal-foot" style="justify-content: center; gap: 10px">
+          <button class="btn-cancel" id="deleteCancelBtn">Cancel</button>
+          <button class="btn-danger" id="deleteConfirmBtn">
+            <i
+              class="ti ti-trash"
+              style="font-size: 14px; margin-right: 4px"
+            ></i
+            >Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="ui-system.js?v=20260621-1"></script>
+    <script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="users.js"></script>
+  </body>
+</html>

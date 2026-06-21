@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Reports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/reports.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🐾</div>
+      <div><span class="brand-name">PAWPOS</span><span class="brand-sub">Pet Shop System</span></div>
+    </a>
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item" href="dashboard.html"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+      <a class="nav-item" href="pos.html"><i class="ti ti-shopping-cart"></i> Point of Sale</a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" href="inventory.html"><i class="ti ti-building-warehouse"></i> Inventory <span class="nav-badge">3</span></a>
+      <a class="nav-item" href="suppliers.html"><i class="ti ti-truck"></i> Suppliers</a>
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item" href="customers.html"><i class="ti ti-users"></i> Customers</a>
+      <a class="nav-item" href="pets.html"><i class="ti ti-paw"></i> Pet Records</a>
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html"><i class="ti ti-calendar"></i> Appointments <span class="nav-badge">5</span></a>
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item active" href="reports.html"><i class="ti ti-file-text"></i> Reports</a>
+      <a class="nav-item" href="audit.html"><i class="ti ti-shield"></i> Audit Logs</a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html"><i class="ti ti-users-group"></i> User Accounts</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar">AD</div>
+      <div><span class="user-name">Admin User</span><span class="user-role">Administrator</span></div>
+      <button class="user-logout" id="logoutBtn" aria-label="Logout"><i class="ti ti-logout"></i></button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar"><i class="ti ti-menu-2"></i></button>
+        <div>
+          <div class="page-title">Reports</div>
+          <div class="page-sub" id="topbarSub">Generate and review reports</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-secondary" id="printBtn" data-rbac="report:export"><i class="ti ti-printer"></i> Print</button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Print header (visible on print only) -->
+      <div class="print-header" id="printHeader">
+        <h2>🐾 PAWPOS Pet Shop</h2>
+        <p id="printSubtitle">Report</p>
+        <p id="printDate" style="color:#bbb;font-size:11px;"></p>
+      </div>
+
+      <!-- Report type selector -->
+      <div class="report-types" id="reportTypes"></div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar" id="filterBar">
+        <span class="filter-bar-label">Period:</span>
+        <div class="period-tabs" id="periodTabs"></div>
+        <input type="date" class="filter-input" id="dateFrom" aria-label="Date from" />
+        <span style="font-size:12px;color:#bbb">to</span>
+        <input type="date" class="filter-input" id="dateTo"   aria-label="Date to" />
+        <button class="btn-secondary" id="applyFilter" style="height:34px;padding:0 12px;font-size:12.5px;">
+          <i class="ti ti-filter"></i> Apply
+        </button>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="summary-row" id="summaryRow"></div>
+
+      <!-- Chart -->
+      <div class="chart-card" id="chartCard"></div>
+
+      <!-- Table -->
+      <div class="table-wrap" id="reportTableWrap"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="reports.js?v=20260621-8"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAWPOS — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/dashboard.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <a class="sidebar-brand" href="index.html">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <span class="brand-name">PAWPOS</span>
+        <span class="brand-sub">Pet Shop System</span>
+      </div>
+    </a>
+
+    <nav>
+      <div class="nav-section-label">Main</div>
+      <a class="nav-item active" href="dashboard.html">
+        <i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard
+      </a>
+      <a class="nav-item" href="pos.html">
+        <i class="ti ti-shopping-cart" aria-hidden="true"></i> Point of Sale
+      </a>
+
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" href="inventory.html">
+        <i class="ti ti-building-warehouse" aria-hidden="true"></i> Inventory
+        <span class="nav-badge" id="lowStockBadge">3</span>
+      </a>
+      <a class="nav-item" href="suppliers.html">
+        <i class="ti ti-truck" aria-hidden="true"></i> Suppliers
+      </a>
+
+      <div class="nav-section-label">Clients</div>
+      <a class="nav-item" href="customers.html">
+        <i class="ti ti-users" aria-hidden="true"></i> Customers
+      </a>
+      <a class="nav-item" href="pets.html">
+        <i class="ti ti-paw" aria-hidden="true"></i> Pet Records
+      </a>
+
+      <div class="nav-section-label">Grooming</div>
+      <a class="nav-item" href="appointments.html">
+        <i class="ti ti-calendar" aria-hidden="true"></i> Appointments
+        <span class="nav-badge" id="apptBadge">5</span>
+      </a>
+
+      <div class="nav-section-label">Reports</div>
+      <a class="nav-item" href="reports.html">
+        <i class="ti ti-file-text" aria-hidden="true"></i> Reports
+      </a>
+      <a class="nav-item" href="audit.html">
+        <i class="ti ti-shield" aria-hidden="true"></i> Audit Logs
+      </a>
+
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" href="users.html">
+        <i class="ti ti-users-group" aria-hidden="true"></i> User Accounts
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">AD</div>
+      <div>
+        <span class="user-name" id="userDisplayName">Admin User</span>
+        <span class="user-role" id="userDisplayRole">Administrator</span>
+      </div>
+      <button class="user-logout" id="logoutBtn" title="Logout" aria-label="Logout">
+        <i class="ti ti-logout" aria-hidden="true"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="ti ti-menu-2" aria-hidden="true"></i>
+        </button>
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub" id="todayDate">Loading...</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn has-dot" id="notifBtn" title="Notifications" aria-label="Notifications">
+          <i class="ti ti-bell" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card" id="statCardSales">
+          <div class="stat-top">
+            <span class="stat-label">Total sales today</span>
+            <div class="stat-icon green"><i class="ti ti-currency-peso" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statSales">₱0</div>
+          <div class="stat-meta"><span class="up" id="statSalesTrend">↑ 0%</span> vs yesterday</div>
+        </div>
+
+        <div class="stat-card" id="statCardProducts">
+          <div class="stat-top">
+            <span class="stat-label">Total products</span>
+            <div class="stat-icon blue"><i class="ti ti-box" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statProducts">0</div>
+          <div class="stat-meta">Across <span id="statCategories" style="color:#111">0</span> categories</div>
+        </div>
+
+        <div class="stat-card" id="statCardLowStock">
+          <div class="stat-top">
+            <span class="stat-label">Low stock items</span>
+            <div class="stat-icon red"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statLowStock">0</div>
+          <div class="stat-meta"><span class="down">Needs restocking</span></div>
+        </div>
+
+        <div class="stat-card" id="statCardAppts">
+          <div class="stat-top">
+            <span class="stat-label">Today's appointments</span>
+            <div class="stat-icon amber"><i class="ti ti-calendar" aria-hidden="true"></i></div>
+          </div>
+          <div class="stat-value" id="statAppts">0</div>
+          <div class="stat-meta" id="statApptMeta">—</div>
+        </div>
+      </div>
+
+      <!-- Bottom grid -->
+      <div class="bottom-grid">
+
+        <!-- Today's appointments -->
+        <div class="card" id="cardAppts">
+          <div class="card-header">
+            <span class="card-title">
+              <i class="ti ti-scissors" aria-hidden="true"></i>
+              Today's appointments
+            </span>
+            <a class="card-link" href="appointments.html">View all →</a>
+          </div>
+          <div class="appt-list" id="apptList">
+            <div style="font-size:13px;color:#bbb;padding:1rem 0;text-align:center;">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Low stock alerts -->
+        <div class="card" id="cardStock">
+          <div class="card-header">
+            <span class="card-title">
+              <i class="ti ti-alert-triangle" style="color:#c0392b" aria-hidden="true"></i>
+              Low stock alerts
+            </span>
+            <a class="card-link" href="inventory.html">Manage →</a>
+          </div>
+          <div class="stock-list" id="stockList">
+            <div style="font-size:13px;color:#bbb;padding:1rem 0;text-align:center;">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Recent transactions -->
+        <div class="card full-width" id="cardTxns">
+          <div class="card-header">
+            <span class="card-title">
+              <i class="ti ti-receipt" aria-hidden="true"></i>
+              Recent transactions
+            </span>
+            <a class="card-link" href="pos.html">View all →</a>
+          </div>
+          <div class="txn-list" id="txnList">
+            <div style="font-size:13px;color:#bbb;padding:1rem 0;text-align:center;">Loading...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NOTIFICATION PANEL ── -->
+<div class="notif-panel" id="notifPanel" role="dialog" aria-label="Notifications">
+  <div class="notif-head">
+    <span>Notifications</span>
+    <button class="notif-close" id="notifClose" aria-label="Close notifications">
+      <i class="ti ti-x" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="notif-body" id="notifBody"></div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="dashboard.js?v=20260621-8"></script>
+</body>
+</html>

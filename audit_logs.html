@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Logs — PAWPOS</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+  <!-- Base styles -->
+
+  <link rel="stylesheet" href="css/audit_logs.css?v=20260621-1" />
+  <link rel="stylesheet" href="css/pawpos-ui.css?v=20260621-2" />
+</head>
+
+<body>
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a href="dashboard.html" class="sidebar-brand" aria-label="PAWPOS home">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <span class="brand-name">PAWPOS</span>
+        <span class="brand-sub">Pet Shop POS</span>
+      </div>
+    </a>
+
+    <span class="nav-section-label">Main</span>
+    <a href="dashboard.html"   class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+    <a href="pos.html"         class="nav-item"><i class="ti ti-shopping-cart"></i> Point of Sale</a>
+
+    <span class="nav-section-label">Management</span>
+    <a href="inventory.html"   class="nav-item"><i class="ti ti-building-warehouse"></i> Inventory</a>
+    <a href="customers.html"   class="nav-item"><i class="ti ti-users"></i> Customers</a>
+    <a href="pets.html"        class="nav-item"><i class="ti ti-paw"></i> Pets</a>
+    <a href="appointments.html"class="nav-item">
+      <i class="ti ti-calendar"></i> Appointments
+      <span class="nav-badge" id="apptBadge">5</span>
+    </a>
+    <a href="suppliers.html"   class="nav-item"><i class="ti ti-truck"></i> Suppliers</a>
+
+    <span class="nav-section-label">Insights</span>
+    <a href="reports.html"     class="nav-item"><i class="ti ti-file-analytics"></i> Reports</a>
+
+    <span class="nav-section-label">System</span>
+    <a href="users.html"       class="nav-item"><i class="ti ti-shield-lock"></i> Users</a>
+    <a href="audit_logs.html"  class="nav-item active" aria-current="page"><i class="ti ti-history"></i> Audit Logs</a>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">AD</div>
+      <div>
+        <span class="user-name"  id="userDisplayName">Admin</span>
+        <span class="user-role"  id="userDisplayRole">Admin</span>
+      </div>
+      <button class="user-logout" id="logoutBtn" aria-label="Log out">
+        <i class="ti ti-logout"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar" role="banner">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="false">
+          <i class="ti ti-menu-2"></i>
+        </button>
+        <div>
+          <h1 class="page-title">Audit Logs</h1>
+          <p class="page-sub">Track every action across PAWPOS</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span id="lastUpdated"></span>
+        <button class="icon-btn" id="refreshBtn" title="Refresh data" aria-label="Refresh audit logs">
+          <i class="ti ti-refresh"></i>
+        </button>
+        <button class="btn-primary" id="exportBtn" style="height:36px;font-size:12.5px;gap:5px;border:none;cursor:pointer">
+          <i class="ti ti-file-download" style="font-size:15px"></i> Export CSV
+        </button>
+      </div>
+    </header>
+
+    <!-- ── CONTENT ── -->
+    <main class="audit-content" id="auditContent">
+
+      <!-- 1. STAT CARDS -->
+      <section class="kpi-grid" aria-label="Audit log summary" id="statGrid">
+        <!-- Rendered by JS -->
+      </section>
+
+      <!-- 2. FILTER BAR -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-card-title"><i class="ti ti-filter"></i> Filters</span>
+          <span class="chart-card-meta" id="resultsMeta"></span>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-row">
+            <input type="text" class="filter-input" id="searchInput"
+                   placeholder="Search by user, action, or description…" aria-label="Search audit logs" />
+
+            <select class="filter-select" id="roleSelect" aria-label="Filter by role">
+              <option value="">All roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Cashier">Cashier</option>
+              <option value="Groomer">Groomer</option>
+            </select>
+
+            <input type="date" class="filter-date" id="fromDate" aria-label="From date" />
+            <input type="date" class="filter-date" id="toDate" aria-label="To date" />
+
+            <button class="filter-clear-btn" id="clearFiltersBtn"><i class="ti ti-x"></i> Clear</button>
+          </div>
+
+          <div class="filter-row">
+            <div class="quick-date-row" id="quickDateRow">
+              <button class="quick-date-btn" data-range="today">Today</button>
+              <button class="quick-date-btn" data-range="7">Last 7 days</button>
+              <button class="quick-date-btn active" data-range="30">Last 30 days</button>
+              <button class="quick-date-btn" data-range="90">Last 90 days</button>
+            </div>
+          </div>
+
+          <div class="cat-chip-row" id="catChipRow">
+            <!-- "All" + categories rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. TABLE -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-card-title"><i class="ti ti-history"></i> Activity log</span>
+          <span class="chart-card-meta">Click a row for details</span>
+        </div>
+
+        <div class="audit-table-wrap">
+          <table class="audit-table">
+            <thead>
+              <tr>
+                <th style="width:18px"></th>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Category</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <tr><td colspan="7" class="audit-loading-row">Loading audit logs…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination-row" id="paginationRow">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="ui-system.js?v=20260621-1"></script>
+<script src="api.js"></script>
+<script src="shared-sidebar.js?v=20260621-2"></script>
+<script src="rbac.js"></script>
+<script src="audit_logs.js?v=20260621-8"></script>
+</body>
+</html>
